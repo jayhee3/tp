@@ -1,5 +1,8 @@
 package seedu.address.model.module;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -7,6 +10,8 @@ import java.time.format.DateTimeFormatter;
  * Represents a Module's deadline.
  */
 public class Deadline {
+    public static final String MESSAGE_CONSTRAINTS =
+            "Deadlines should be of the form 'DDMMYY HH:MM' (Example: 250623 18:00)";
     public static final String VALIDATION_REGEX = "^[0-9]{6}\\s[0-9]{2}[:][0-9]{2}$";
 
     public final LocalDateTime value;
@@ -17,8 +22,8 @@ public class Deadline {
      * @param deadline A valid deadline.
      */
     public Deadline(String deadline) {
-        //deadline is optional and hence we do not requireNonNull.
-        //requireNonNull(deadline);
+        requireNonNull(deadline);
+        checkArgument(isValidDeadline(deadline), MESSAGE_CONSTRAINTS);
         value = convertStringToDate(deadline);
     }
 
@@ -48,21 +53,12 @@ public class Deadline {
      * Returns String of desired display format
      * @return Display format String
      */
-    public String displayFormat() {
-        if (value == null) {
-            return "None.";
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, HH:mm");
-        return formatter.format(value);
-    }
-
-
     @Override
     public String toString() {
         if (value == null) {
             return "None.";
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy HH:mm");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm");
         return dateTimeFormatter.format(value);
     }
 

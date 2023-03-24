@@ -4,11 +4,12 @@ package seedu.address.model.module;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
-import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * Represents a Module's timeSlot in the address book.
@@ -22,7 +23,8 @@ public class TimeSlot {
 
     public static final String MESSAGE_CONSTRAINTS =
             "Timeslot should be of format 'Day StartTime EndTime' (Example: Tuesday 12:00 14:00)";
-    public static final String VALIDATION_REGEX = "^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\\s(([01]?[0-9]|2[0-3]):[0-5][0-9])\\s(([01]?[0-9]|2[0-3]):[0-5][0-9])$";
+    public static final String VALIDATION_REGEX = "^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)"
+            + "\\s(([01]?[0-9]|2[0-3]):[0-5][0-9])\\s(([01]?[0-9]|2[0-3]):[0-5][0-9])$";
     public final DayOfWeek day;
     public final LocalTime startTime;
     public final LocalTime endTime;
@@ -68,43 +70,25 @@ public class TimeSlot {
     }
 
     /**
-     * Returns the conversion of String to a LocalDateTime
-     * @return LocalDateTime instance
-     */
-    private LocalDateTime convertStringToDate(String timeslot) {
-        if (timeslot.equals("None.")) {
-            return null;
-        }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy HH:mm");
-        return LocalDateTime.parse(timeslot, dateTimeFormatter);
-    }
-
-    /**
      * Returns String of desired display format
      * @return Display format String
      */
-    public String displayFormat() {
-        if (day == null) {
-            return "None.";
-        }
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, hh:mm a");
-        return day.toString() + startTime + endTime;
-    }
-
     @Override
     public String toString() {
         if (day == null) {
             return "None.";
         }
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy HH:mm");
-        return day.toString() + startTime + endTime;
+        //DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy HH:mm");
+        return day.name().toLowerCase().substring(0, 1).toUpperCase() + day.name().toLowerCase().substring(1)
+                + " " + startTime + " " + endTime;
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof TimeSlot // instanceof handles nulls
-                && day.equals(((TimeSlot) other).day) && startTime.equals(((TimeSlot) other).startTime) && endTime.equals(((TimeSlot) other).endTime)); // state check
+                && day.equals(((TimeSlot) other).day) && startTime.equals(((TimeSlot) other).startTime)
+                && endTime.equals(((TimeSlot) other).endTime)); // state check
     }
 
     @Override
@@ -112,7 +96,23 @@ public class TimeSlot {
         return day.hashCode();
     }
 
+    //The timeslot gives us the day and the starting time. We first need to get the time from the local machine.
+    //then find out the date the day next happens. Then combine it with the starting time to get the localdatetime.
     public LocalDateTime getValue() {
-        return LocalDateTime.parse("250600 18:00");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // Get the day and starting time of the task
+        DayOfWeek taskDay = day;
+        LocalTime taskStartTime = startTime;
+
+        // Get the next occurrence of the task day
+        LocalDateTime nextTaskDay = now.with(TemporalAdjusters.next(taskDay));
+
+        // Combine the task day and starting time to get the task date and time
+        LocalDateTime taskDateTime = nextTaskDay.with(taskStartTime);
+
+        // Return this LocalDateTime
+        return taskDateTime;
     }
 }

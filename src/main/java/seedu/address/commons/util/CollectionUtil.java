@@ -7,11 +7,11 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+
 /**
  * Utility methods related to Collections
  */
 public class CollectionUtil {
-
     /** @see #requireAllNonNull(Collection) */
     public static void requireAllNonNull(Object... items) {
         requireNonNull(items);
@@ -32,4 +32,6 @@ public class CollectionUtil {
     public static boolean isAnyNonNull(Object... items) {
         return items != null && Arrays.stream(items).anyMatch(Objects::nonNull);
     }
+
+
 }

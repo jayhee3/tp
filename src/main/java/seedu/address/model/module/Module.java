@@ -150,20 +150,16 @@ public class Module implements Comparable<Module> {
         return builder.toString();
     }
 
-    public LocalDateTime getTime() {
-        //There should be a check such that for each module, it either only has a TimeSlot or a Deadline (but not both).
-        //Note that the value stored in Deadline/TimeSlot is a LocalDateTime.
-        if (getTimeSlot() == null) {
-            return getDeadline().getValue();
+    public LocalDateTime getTimeFromDeadlineOrTimeSlot() {
+        if (getDeadline().getValue() == null) {
+            return getTimeSlot().getValue();
         }
-        return getTimeSlot().getValue();
+        return getDeadline().getValue();
     }
 
+    //Modules are compared based on the time in their deadline or timeslot (Only one field should be filled.)
     @Override
-    public int compareTo(Module o) {
-        if (getTime() == null || o.getTime() == null) {
-            return 0;
-        }
-        return getTime().compareTo(o.getTime());
+    public int compareTo(Module otherModule) {
+        return getTimeFromDeadlineOrTimeSlot().compareTo(otherModule.getTimeFromDeadlineOrTimeSlot());
     }
 }

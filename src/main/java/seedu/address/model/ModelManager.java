@@ -4,8 +4,6 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -22,16 +20,12 @@ import seedu.address.model.module.Module;
  */
 public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
-
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
-
     /**
-     * Current ObservableList is either a filtered list (if user tries to search) or a sorted list (if user uses sort)
+     * The list of modules that is displayed to the user in the UI based on the predicate.
      */
     private final FilteredList<Module> filteredModules;
-
-    //private final SortedList<Module> sortedByTimeModules;
 
 
     /**
@@ -39,19 +33,17 @@ public class ModelManager implements Model {
      */
     public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyUserPrefs userPrefs) {
         requireAllNonNull(addressBook, userPrefs);
-
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
-
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        ObservableList<Module> sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), (o, e) -> {
-            if (o.getTime() == null || e.getTime() == null) {
-                return 0;
-            }
-            return o.getTime().compareTo(e.getTime());
-        });
 
-        //This way, the list is always sorted by Time!
+        ObservableList<Module> sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
+            @Override
+            public int compare(Module o1, Module o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        //The modules are always sorted by time.
         filteredModules = new FilteredList<>(sortedByTimeModules);
     }
 
@@ -140,12 +132,6 @@ public class ModelManager implements Model {
     public ObservableList<Module> getFilteredModuleList() {
         return filteredModules;
     }
-
-
-    //@Override
-   // public ObservableList<Module> getSortedByTimeModuleList() {
-       // return sortedByTimeModules;
-   // }
 
     @Override
     public void updateFilteredModuleList(Predicate<Module> predicate) {
