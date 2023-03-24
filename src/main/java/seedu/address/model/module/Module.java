@@ -166,6 +166,4 @@ public class Module implements Comparable<Module> {
         }
         return getTime().compareTo(o.getTime());
     }
-
-
 }

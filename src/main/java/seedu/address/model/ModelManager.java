@@ -31,7 +31,7 @@ public class ModelManager implements Model {
      */
     private final FilteredList<Module> filteredModules;
 
-    private final SortedList<Module> sortedByTimeModules;
+    //private final SortedList<Module> sortedByTimeModules;
 
 
     /**
@@ -44,15 +44,15 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredModules = new FilteredList<>(this.addressBook.getModuleList());
-        sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
-            public int compare(Module o, Module e) {
-                if (o.getTime() == null || e.getTime() == null) {
-                    return 0;
-                }
-                return o.getTime().compareTo(e.getTime());
+        ObservableList<Module> sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), (o, e) -> {
+            if (o.getTime() == null || e.getTime() == null) {
+                return 0;
             }
+            return o.getTime().compareTo(e.getTime());
         });
+
+        //This way, the list is always sorted by Time!
+        filteredModules = new FilteredList<>(sortedByTimeModules);
     }
 
     public ModelManager() {
@@ -141,10 +141,11 @@ public class ModelManager implements Model {
         return filteredModules;
     }
 
-    @Override
-    public ObservableList<Module> getSortedByTimeModuleList() {
-        return sortedByTimeModules;
-    }
+
+    //@Override
+   // public ObservableList<Module> getSortedByTimeModuleList() {
+       // return sortedByTimeModules;
+   // }
 
     @Override
     public void updateFilteredModuleList(Predicate<Module> predicate) {
