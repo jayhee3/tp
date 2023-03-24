@@ -60,8 +60,8 @@ public class LogicManager implements Logic {
     }
 
     @Override
-    public ObservableList<Module> getFilteredModuleList() {
-        return model.getFilteredModuleList();
+    public ObservableList<Module> getSortedByTimeModuleList() {
+        return model.getSortedByTimeModuleList();
     }
 
     @Override

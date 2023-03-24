@@ -2,6 +2,7 @@ package seedu.address.model.module;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import seedu.address.model.tag.Tag;
  * Represents a Module in the address book.
  * Guarantees: details are present and not null, field values are validated, immutable.
  */
-public class Module {
+public class Module implements Comparable<Module> {
 
     // Compulsory fields
     private final Name name; //module name
@@ -148,5 +149,23 @@ public class Module {
         }
         return builder.toString();
     }
+
+    public LocalDateTime getTime() {
+        //There should be a check such that for each module, it either only has a TimeSlot or a Deadline (but not both).
+        //Note that the value stored in Deadline/TimeSlot is a LocalDateTime.
+        if (getTimeSlot() == null) {
+            return getDeadline().getValue();
+        }
+        return getTimeSlot().getValue();
+    }
+
+    @Override
+    public int compareTo(Module o) {
+        if (getTime() == null || o.getTime() == null) {
+            return 0;
+        }
+        return getTime().compareTo(o.getTime());
+    }
+
 
 }

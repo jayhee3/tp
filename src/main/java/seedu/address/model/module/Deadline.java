@@ -78,4 +78,8 @@ public class Deadline {
     public int hashCode() {
         return value.hashCode();
     }
+
+    public LocalDateTime getValue() {
+        return value;
+    }
 }

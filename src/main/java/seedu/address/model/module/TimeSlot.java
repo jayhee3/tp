@@ -85,4 +85,8 @@ public class TimeSlot {
         return value.hashCode();
     }
 
+    public LocalDateTime getValue() {
+        return value;
+    }
+
 }

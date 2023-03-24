@@ -4,11 +4,15 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.module.Module;
@@ -21,7 +25,14 @@ public class ModelManager implements Model {
 
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
+
+    /**
+     * Current ObservableList is either a filtered list (if user tries to search) or a sorted list (if user uses sort)
+     */
     private final FilteredList<Module> filteredModules;
+
+    private final SortedList<Module> sortedByTimeModules;
+
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -34,6 +45,14 @@ public class ModelManager implements Model {
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
         filteredModules = new FilteredList<>(this.addressBook.getModuleList());
+        sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
+            public int compare(Module o, Module e) {
+                if (o.getTime() == null || e.getTime() == null) {
+                    return 0;
+                }
+                return o.getTime().compareTo(e.getTime());
+            }
+        });
     }
 
     public ModelManager() {
@@ -120,6 +139,11 @@ public class ModelManager implements Model {
     @Override
     public ObservableList<Module> getFilteredModuleList() {
         return filteredModules;
+    }
+
+    @Override
+    public ObservableList<Module> getSortedByTimeModuleList() {
+        return sortedByTimeModules;
     }
 
     @Override

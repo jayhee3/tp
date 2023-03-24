@@ -32,7 +32,7 @@ public class SortCommand extends Command {
         requireNonNull(model);
         model.updateFilteredModuleList(predicate);
         return new CommandResult(
-                String.format(Messages.MESSAGE_MODULES_LISTED_OVERVIEW, model.getFilteredModuleList().size()));
+                String.format(Messages.MESSAGE_MODULES_LISTED_OVERVIEW, model.getSortedByTimeModuleList().size()));
     }
 
     @Override
