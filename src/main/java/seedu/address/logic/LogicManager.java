@@ -58,9 +58,11 @@ public class LogicManager implements Logic {
         return model.getAddressBook();
     }
 
+
+
     @Override
-    public ObservableList<Module> getSortedByTimeModuleList() {
-        return model.getFilteredModuleList();
+    public ObservableList<Module> getDisplayedModules() {
+        return model.getDisplayedModules();
     }
 
     @Override

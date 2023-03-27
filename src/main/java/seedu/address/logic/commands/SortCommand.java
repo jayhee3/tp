@@ -30,9 +30,10 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.updateFilteredModuleList(predicate);
+        model.showSortedList();
+        //model.updateFilteredModuleList(predicate);
         return new CommandResult(
-                String.format(Messages.MESSAGE_MODULES_LISTED_OVERVIEW, model.getFilteredModuleList().size()));
+                String.format(Messages.MESSAGE_MODULES_LISTED_OVERVIEW, model.getDisplayedModules().size()));
     }
 
     @Override

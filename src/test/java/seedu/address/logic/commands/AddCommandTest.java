@@ -139,7 +139,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public ObservableList<Module> getFilteredModuleList() {
+        public ObservableList<Module> getDisplayedModules() {
             throw new AssertionError("This method should not be called.");
         }
 

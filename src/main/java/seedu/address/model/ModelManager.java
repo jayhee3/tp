@@ -25,8 +25,7 @@ public class ModelManager implements Model {
     /**
      * The list of modules that is displayed to the user in the UI based on the predicate.
      */
-    private final FilteredList<Module> filteredModules;
-
+    private FilteredList<Module> filteredModules;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -36,15 +35,16 @@ public class ModelManager implements Model {
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-
-        ObservableList<Module> sortedByTimeModules = new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
+       /*
+        sorted code = new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
             @Override
             public int compare(Module o1, Module o2) {
                 return o1.compareTo(o2);
             }
         });
-        //The modules are always sorted by time.
-        filteredModules = new FilteredList<>(sortedByTimeModules);
+        */
+
+        filteredModules = new FilteredList<>(this.addressBook.getModuleList());
     }
 
     public ModelManager() {
@@ -129,7 +129,7 @@ public class ModelManager implements Model {
      * {@code versionedAddressBook}
      */
     @Override
-    public ObservableList<Module> getFilteredModuleList() {
+    public ObservableList<Module> getDisplayedModules() {
         return filteredModules;
     }
 
@@ -156,6 +156,16 @@ public class ModelManager implements Model {
         return addressBook.equals(other.addressBook)
                 && userPrefs.equals(other.userPrefs)
                 && filteredModules.equals(other.filteredModules);
+    }
+    @Override
+    public void showSortedList() {
+        this.filteredModules = new FilteredList(new SortedList<>(this.addressBook.getModuleList(), new Comparator<Module>() {
+            @Override
+            public int compare(Module o1, Module o2) {
+                return o1.compareTo(o2);
+            }
+        }));
+        updateFilteredModuleList(PREDICATE_SHOW_ALL_MODULES);
     }
 
 }

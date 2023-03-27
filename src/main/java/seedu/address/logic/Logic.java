@@ -30,13 +30,12 @@ public interface Logic {
      */
     ReadOnlyAddressBook getAddressBook();
 
-    /** Returns an unmodifiable view of the filtered list of modules */
-    ObservableList<Module> getSortedByTimeModuleList();
-
     /**
      * Returns the user prefs' address book file path.
      */
     Path getAddressBookFilePath();
+
+    ObservableList<Module> getDisplayedModules();
 
     /**
      * Returns the user prefs' GUI settings.
